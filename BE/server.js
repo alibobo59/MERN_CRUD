@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { connectDB } from "./config/db.js";
 import productRouter from "./routes/product.js";
 
@@ -7,8 +8,11 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Use the PORT environment variable or defaul
 
 dotenv.config();
+
 app.use(express.json());
+app.use(cors());
 app.use("/api/products", productRouter);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

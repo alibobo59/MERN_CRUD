@@ -7,11 +7,11 @@ import {
   Text,
   Heading,
   Input,
-  Textarea,
   VStack,
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import React, { useState } from "react";
+import { useProductStore } from "@/components/store/product";
 
 function CreatePage() {
   const [newProduct, setNewProduct] = useState({
@@ -29,11 +29,12 @@ function CreatePage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const { createProduct } = useProductStore();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate form with specific messages
-    if (!newProduct.name) {
+
+    // Validate form with specific messages based on backend schema
+    if (!newProduct.name || !newProduct.name.trim()) {
       toaster.create({
         type: "error",
         description: "Product name is required",
@@ -41,28 +42,44 @@ function CreatePage() {
       return;
     }
 
-    if (!newProduct.price) {
+    if (!newProduct.price || newProduct.price <= 0) {
       toaster.create({
         type: "error",
-        description: "Price is required",
+        description: "Please enter a valid price",
       });
       return;
     }
 
-    if (!newProduct.description) {
+    if (!newProduct.image) {
       toaster.create({
         type: "error",
-        description: "Description is required",
+        description: "Image URL is required",
       });
       return;
     }
 
-    // If all validations pass, show success message
-    console.log("Submitting:", newProduct);
-    toaster.create({
-      type: "success",
-      description: "Product created successfully",
-    });
+    // Prepare the data according to the schema
+    const productData = {
+      name: newProduct.name.trim(),
+      price: Number(newProduct.price),
+      image: newProduct.image,
+    };
+
+    // TODO: Send data to backend
+    try {
+      const res = await createProduct(productData);
+      console.log("Submitting:", productData);
+      toaster.create({
+        type: "success",
+        description: res.message,
+      });
+    } catch (err) {
+      console.log(err);
+      toaster.create({
+        type: "error",
+        description: err.message || "An error occurred",
+      });
+    }
   };
 
   return (
@@ -108,20 +125,6 @@ function CreatePage() {
                 size="lg"
                 borderColor="blue.400"
                 _focus={{ borderColor: "blue.400" }}
-              />
-            </Stack>
-
-            <Stack w="full">
-              <Text fontWeight="medium">Description</Text>
-              <Textarea
-                name="description"
-                value={newProduct.description}
-                onChange={handleInputChange}
-                placeholder="Enter product description"
-                size="lg"
-                borderColor="blue.400"
-                _focus={{ borderColor: "blue.400" }}
-                rows={4}
               />
             </Stack>
 
