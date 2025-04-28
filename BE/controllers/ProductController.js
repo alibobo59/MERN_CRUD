@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 import Product from "../models/Product.js";
-import { bindAll } from "lodash";
+import _ from "lodash";
 
 class ProductController {
   constructor() {
     this.Product = Product; // Reference to the Product model
 
     // Bind all instance methods to ensure `this` context
-    bindAll(this, [
+    _.bindAll(this, [
       "createProduct",
       "getProducts",
       "getProductById",

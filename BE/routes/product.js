@@ -1,21 +1,17 @@
 import express from "express";
-import {
-  createProduct,
-  deleteProduct,
-  updateProduct,
-  getProductById,
-  getProducts,
-} from "../controllers/ProductController.js";
+import ProductController from "../controllers/ProductController.js";
 
 const router = express.Router();
 // import mongoose from "mongoose";
 
-router.post("/", createProduct);
-router.get("/", getProducts);
-router.get("/:id", getProductById);
+const productController = new ProductController();
 
-router.delete("/:id", deleteProduct);
+router.post("/", productController.createProduct);
+router.get("/", productController.getProducts);
+router.get("/:id", productController.getProductById);
 
-router.put("/:id", updateProduct);
+router.delete("/:id", productController.deleteProduct);
+
+router.put("/:id", productController.updateProduct);
 
 export default router;
