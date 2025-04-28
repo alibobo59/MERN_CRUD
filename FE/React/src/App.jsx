@@ -1,12 +1,19 @@
-import { Button, HStack } from "@chakra-ui/react";
-import "./App.css";
-
+import { Box, Button, HStack } from "@chakra-ui/react";
+import { Toaster } from "@/components/ui/toaster";
+import CreatePage from "./pages/CreatePage";
+import HomePage from "./pages/HomePage";
+import NavBar from "./components/NavBar";
+import { Route, Routes } from "react-router-dom";
 function App() {
   return (
-    <HStack>
-      <Button>Click me</Button>
-      <Button>Click me</Button>
-    </HStack>
+    <Box width={"100vw"} minH={"10vh"}>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/create" element={<CreatePage />} />
+      </Routes>
+      <Toaster />
+    </Box>
   );
 }
 
