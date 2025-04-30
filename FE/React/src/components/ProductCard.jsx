@@ -1,44 +1,23 @@
-import { Box, HStack, Image } from "@chakra-ui/react";
+import { Box, HStack, Image, Text } from "@chakra-ui/react";
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { IconButton } from "@chakra-ui/react";
-
+import { useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 
-import { useProductStore } from "@/store/product";
-import { toaster } from "@/components/ui/toaster";
+const ProductCard = ({ product, onDelete }) => {
+  const navigate = useNavigate();
 
-const ProductCard = ({ product }) => {
-  const textColor = useColorModeValue("gray.800", "white");
-  const bgColor = useColorModeValue("white", "gray.800");
-
-  const { deleteProduct } = useProductStore();
-  const handleDelete = async (pid) => {
-    const res = await deleteProduct(pid);
-    console.log(res);
-    if (res.success) {
-      toaster.create({
-        title: "Success",
-        description: res.message,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-    if (!res.success) {
-      toaster.create({
-        title: "Error",
-        description: res.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+  // Define color values for light and dark modes
+  const colors = {
+    text: useColorModeValue("gray.800", "white"),
+    bg: useColorModeValue("white", "gray.800"),
   };
+
   return (
     <Box
-      bg={bgColor}
-      color={textColor}
+      bg={colors.bg}
+      color={colors.text}
       p={4}
       shadow={"lg"}
       rounded={"lg"}
@@ -56,26 +35,29 @@ const ProductCard = ({ product }) => {
         w={"full"}
       />
       <Box p={4}>
-        <Box as="h3" fontSize={"lg"} fontWeight={"bold"}>
+        <Text fontSize={"lg"} fontWeight={"bold"} noOfLines={1} mb={2}>
           {product.name}
-        </Box>
+        </Text>
+        <Text fontSize={"md"} fontWeight={"semibold"} mb={3}>
+          ${product.price}
+        </Text>
         <HStack>
-          <IconButton aria-label="Search database" colorPalette={"blue"}>
+          <IconButton
+            aria-label="Edit product"
+            colorPalette="blue"
+            onClick={() => navigate(`/edit/${product._id}`)}>
             <MdEdit />
           </IconButton>
           <IconButton
-            onClick={() => handleDelete(product._id)}
-            aria-label="Search database"
-            colorPalette={"red"}>
+            onClick={onDelete}
+            aria-label="Delete product"
+            colorPalette="red">
             <MdDelete />
           </IconButton>
         </HStack>
-
-        <Box as="p" fontSize={"lg"} fontWeight={"bold"} mt={2}>
-          ${product.price}
-        </Box>
       </Box>
     </Box>
   );
 };
+
 export default ProductCard;

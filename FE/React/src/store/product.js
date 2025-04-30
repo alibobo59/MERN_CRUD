@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "zustand";
+
 export const useProductStore = create((set) => ({
   products: [],
   setProducts: (products) => set({ products }),
@@ -26,7 +27,7 @@ export const useProductStore = create((set) => ({
     } catch (err) {
       return {
         success: false,
-        message: err.response.data.message,
+        message: err.response?.data?.message || "An error occurred",
       };
     }
   },
@@ -53,8 +54,6 @@ export const useProductStore = create((set) => ({
         };
       }
       if (res.data.success) {
-        console.log("day la re.sdata");
-        console.log(res.data);
         set((state) => ({
           products: state.products.filter((product) => product._id !== id),
         }));
@@ -65,6 +64,43 @@ export const useProductStore = create((set) => ({
       }
     } catch (err) {
       console.log(err);
+    }
+  },
+  updateProduct: async (id, updatedData) => {
+    if (!updatedData.price || !updatedData.image || !updatedData.name) {
+      return {
+        success: false,
+        message: "Please fill all the fields",
+      };
+    }
+    try {
+      const res = await axios.put(
+        `http://localhost:3000/api/products/${id}`,
+        updatedData
+      );
+      if (res.data.success) {
+        set((state) => ({
+          products: state.products.map((product) =>
+            product._id === id ? { ...product, ...res.data.data } : product
+          ),
+        }));
+        return {
+          success: true,
+          message: "Product updated successfully",
+          data: res.data.data,
+        };
+      } else {
+        return {
+          success: false,
+          message: res.data.message || "Failed to update product",
+        };
+      }
+    } catch (err) {
+      console.error("Error updating product:", err);
+      return {
+        success: false,
+        message: err.response?.data?.message || "An error occurred",
+      };
     }
   },
 }));
