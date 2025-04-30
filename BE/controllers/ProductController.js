@@ -154,6 +154,7 @@ class ProductController {
         });
       }
       return res.status(200).json({
+        message: "Product deleted successfully",
         success: true,
         data: product,
       });

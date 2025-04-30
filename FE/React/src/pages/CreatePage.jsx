@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import React, { useState } from "react";
-import { useProductStore } from "@/components/store/product";
+import { useProductStore } from "@/store/product";
 
 function CreatePage() {
   const [newProduct, setNewProduct] = useState({
@@ -45,6 +45,7 @@ function CreatePage() {
     if (!newProduct.price || newProduct.price <= 0) {
       toaster.create({
         type: "error",
+        tittle: "Invalid Price",
         description: "Please enter a valid price",
       });
       return;
@@ -53,6 +54,7 @@ function CreatePage() {
     if (!newProduct.image) {
       toaster.create({
         type: "error",
+        title: "Invalid Image URL",
         description: "Image URL is required",
       });
       return;
@@ -71,13 +73,17 @@ function CreatePage() {
       console.log("Submitting:", productData);
       toaster.create({
         type: "success",
+        title: "Product Created",
         description: res.message,
+        isCloseAble: true,
       });
     } catch (err) {
       console.log(err);
       toaster.create({
         type: "error",
+        title: "Error",
         description: err.message || "An error occurred",
+        isCloseAble: true,
       });
     }
   };
