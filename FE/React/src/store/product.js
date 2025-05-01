@@ -1,6 +1,9 @@
 import axios from "axios";
 import { create } from "zustand";
 
+// Get the base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const useProductStore = create((set) => ({
   products: [],
   setProducts: (products) => set({ products }),
@@ -13,7 +16,7 @@ export const useProductStore = create((set) => ({
     }
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/products/",
+        `${API_BASE_URL}/products/`, // Use environment variable
         newProduct
       );
       set((state) => ({
@@ -33,7 +36,7 @@ export const useProductStore = create((set) => ({
   },
   fetchProducts: async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/products/");
+      const res = await axios.get(`${API_BASE_URL}/products/`); // Use environment variable
       const data = res.data.data;
       set({ products: data });
       return data;
@@ -44,7 +47,7 @@ export const useProductStore = create((set) => ({
   deleteProduct: async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:3000/api/products/${id}`
+        `${API_BASE_URL}/products/${id}` // Use environment variable
       );
 
       if (!res.data.success) {
@@ -75,7 +78,7 @@ export const useProductStore = create((set) => ({
     }
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/products/${id}`,
+        `${API_BASE_URL}/products/${id}`, // Use environment variable
         updatedData
       );
       if (res.data.success) {

@@ -12,8 +12,10 @@ import {
 import { toaster } from "@/components/ui/toaster";
 import React, { useState } from "react";
 import { useProductStore } from "@/store/product";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function CreatePage() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -77,6 +79,7 @@ function CreatePage() {
         description: res.message,
         isCloseAble: true,
       });
+      navigate("/"); // Redirect to homepage on success
     } catch (err) {
       console.log(err);
       toaster.create({

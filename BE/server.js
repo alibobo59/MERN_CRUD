@@ -3,9 +3,13 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
 import productRouter from "./routes/product.js";
+import path from "path";
 
+const __dirname = path.resolve();
 const app = express();
-const PORT = process.env.PORT || 3000; // Use the PORT environment variable or defaul
+const PORT = process.env.PORT || 3000; //
+//
+//  Use the PORT environment variable or defaul
 
 dotenv.config();
 
